@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        TERRAFORM_DIR = "terraform/"
+    }
 
     stages {
         stage("Prep") {
