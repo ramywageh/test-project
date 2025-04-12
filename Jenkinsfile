@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        TERRAFORM_DIR = "terraform/"
-        ANSIBLE_PLAYBOOK = "ansible/playbook.yml"
+       dockerImage=''
+       registry='ramywageh/ramy-dockerhub'
     }
     stages {
         stage("Prep") {
@@ -15,6 +15,13 @@ pipeline {
                     changelog: true,
                     poll: true
                 )
+            }
+        }
+        stage('Build'){
+            steps{
+                script{
+                    dockerImage = docker.Build registry
+                }
             }
         }
     }
