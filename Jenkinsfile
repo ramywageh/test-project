@@ -36,7 +36,7 @@ pipeline {
         }
     }
 
-    post {
+   /*post {
         success {
             withCredentials([usernamePassword(credentialsId:"docker",usernameVariable:"USER",passwordVariable:"PASS")]){
                 slackSend(
@@ -54,5 +54,5 @@ pipeline {
                 message: "${env.JOB_NAME} is failed. Build no. ${env.BUILD_NUMBER} URL: ${env.BUILD_URL}"
             )
         }
-    }
+    }*/
 }
