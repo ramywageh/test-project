@@ -5,7 +5,7 @@ pipeline {
         stage("Prep") {
             steps {
                 git(
-                    url: "https:"https://github.com/ramywageh/test-project.git",
+                    url: "https://github.com/ramywageh/test-project.git",
                     branch: "main",
                     credentialsId: "github",
                     changelog: true,
