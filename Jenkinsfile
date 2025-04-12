@@ -18,7 +18,7 @@ pipeline {
             }
         }
 
-        stage("Build") {
+        /*stage("Build") {
             steps {
                 withCredentials([usernamePassword(credentialsId:"docker",usernameVariable:"USER",passwordVariable:"PASS")]){
                 sh 'docker build . -t ${USER}/todo-app:v1.${BUILD_NUMBER}'
@@ -36,7 +36,7 @@ pipeline {
         }
     }
 
-   /*post {
+   post {
         success {
             withCredentials([usernamePassword(credentialsId:"docker",usernameVariable:"USER",passwordVariable:"PASS")]){
                 slackSend(
