@@ -9,7 +9,7 @@ pipeline {
         stage("Prep") {
             steps {
                 git(
-                    url: "https://github.com/ibrahem365/DevOps-Project-Depi.git",
+                    url: "https://github.com/ramywageh/test-project.git",
                     branch: "main",
                     credentialsId: "GitHub",
                     changelog: true,
