@@ -11,12 +11,9 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         AWS_DEFAULT_REGION    = 'ap-south-1'
         TERRAFORM_VERSION = "1.9.2"
+        TERRAFORM_BIN_DIR = "${WORKSPACE}/terraform-bin"
     }
     
-    options {
-        // Increase timeout for the whole pipeline or stages if needed
-        timeout(time: 20, unit: 'MINUTES')
-    }
 
     stages {
         stage('Checkout') {
@@ -24,15 +21,15 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/ramywageh/test-project.git'
             }
         }
-        stage('Install Terraform') {
+        stage('Install Terraform (No Sudo)') {
             steps {
                 script {
                     sh '''
                         set -e
 
-                        echo "Creating temp install directory..."
-                        mkdir -p /tmp/terraform-install
-                        cd /tmp/terraform-install
+                        echo "Creating local bin directory..."
+                        mkdir -p ${TERRAFORM_BIN_DIR}
+                        cd /tmp
 
                         echo "Downloading Terraform ${TERRAFORM_VERSION}..."
                         curl -s -O https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
@@ -40,22 +37,23 @@ pipeline {
                         echo "Unzipping..."
                         unzip -o terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 
-                        echo "Installing Terraform binary..."
-                        sudo mv -f terraform /usr/local/bin/terraform
-
-                        echo "Verifying install..."
-                        terraform version
+                        echo "Moving Terraform binary to local bin dir..."
+                        mv terraform ${TERRAFORM_BIN_DIR}/terraform
 
                         echo "Cleaning up..."
-                        cd /
-                        rm -rf /tmp/terraform-install
+                        rm -f terraform_${TERRAFORM_VERSION}_linux_amd64.zip
                     '''
                 }
             }
         }
-        stage('Terraform init') {
-            steps {    
-                sh 'terraform init'
+        stage('Terraform Init') {
+            steps {
+                withEnv(["PATH=${env.TERRAFORM_BIN_DIR}:/usr/bin:/bin"]) {
+                    sh '''
+                        terraform version
+                        terraform init
+                    '''
+                }
             }
         }
         stage('Plan') {
