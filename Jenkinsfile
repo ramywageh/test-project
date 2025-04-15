@@ -14,7 +14,7 @@ pipeline {
                     
                 )
             }
-        }
+        }/*
         stage("Terraform init") {
             steps {
                 dir("${TERRAFORM_DIR}") {
@@ -57,7 +57,7 @@ pipeline {
                     }
                 }
             }
-        }*/
+        }
         stage("adding scraping targets to prometheus") {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'jenkins_ssh_key', keyFileVariable: 'SSH_KEY')]) {
@@ -108,7 +108,7 @@ pipeline {
                 }
             }
         }
-    }
+    }*/
     post {
         success {
             withCredentials([usernamePassword(credentialsId:"docker",usernameVariable:"USER",passwordVariable:"PASS")]){
