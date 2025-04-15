@@ -35,7 +35,7 @@ pipeline {
                     }
                 }
             }
-        }
+        }/*
         stage('Run Ansible Playbook To Configure The Deployment and monitoring Environment') {
             steps {
                 // Pass the SSH key and publicIP to Ansible 
@@ -59,7 +59,7 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
         stage("adding scraping targets to prometheus") {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'jenkins_ssh_key', keyFileVariable: 'SSH_KEY')]) {
