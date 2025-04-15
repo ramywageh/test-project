@@ -1,5 +1,5 @@
 pipeline {
-
+  agent  any
     parameters {
         booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
     } 
@@ -8,14 +8,16 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
     }
 
-   agent  any
     stages {
         stage('checkout') {
             steps {
                  script{
-                        dir("terraform")
-                        {
-                            git "https://github.com/ramywageh/test-project.git"
+                        dir("terraform"){
+                        
+                        git(
+                        url: "https://github.com/ramywageh/test-project.git",
+                        branch: "main",
+                        )
                         }
                     }
                 }
@@ -51,4 +53,4 @@ pipeline {
         }
     }
 
-  }
+}
