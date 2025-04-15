@@ -71,7 +71,7 @@ pipeline {
         }
         stage('Apply / Destroy') {
             steps {
-                withEnv(["PATH=${TERRAFORM_BIN_DIR}:${env.PATH}"]) {
+                
                     script {
                       if (params.action == 'apply') {
                           if (!params.autoApprove) {
@@ -85,9 +85,9 @@ pipeline {
                           sh 'terraform ${action} --auto-approve'
                       } else {
                           error "Invalid action selected. Please choose either 'apply' or 'destroy'."
-                      }
+                        }
                     }
-                }
+                
             }
         }
         stage("Build") {
