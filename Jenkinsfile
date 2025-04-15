@@ -20,7 +20,8 @@ pipeline {
         }
         stage('Terraform init') {
             steps {
-                sh 'install terraform'
+                sh 'sudo apt-get install terraform'
+                    
                 sh 'terraform init'
             }
         }
