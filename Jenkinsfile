@@ -12,6 +12,7 @@ pipeline {
         AWS_DEFAULT_REGION    = 'ap-south-1'
         TERRAFORM_VERSION = "1.9.2"
         TERRAFORM_BIN_DIR = "${WORKSPACE}/terraform-bin"
+        TERRAFORM_DIR = "Terraform/"
     }
     
 
@@ -49,10 +50,12 @@ pipeline {
         stage('Terraform Init') {
             steps {
                 withEnv(["PATH=${env.TERRAFORM_BIN_DIR}:/usr/bin:/bin"]) {
-                    sh '''
-                        terraform version
-                        terraform init
-                    '''
+                    dir("${TERRAFORM_DIR}") {
+                        sh '''
+                          terraform version
+                          terraform init
+                        '''
+                    }    
                 }
             }
         }
