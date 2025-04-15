@@ -31,14 +31,22 @@ pipeline {
                     def result = sh(
                         script: '''
                             set -e
+                           
                             echo "Downloading Terraform..."
                             curl -s -O https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+                           
                             echo "Unzipping..."
                             unzip -o terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+                           
                             echo "Moving binary to /usr/local/bin..."
                             sudo mv terraform /usr/local/bin/
+                            
                             echo "Verifying installation..."
                             terraform version
+                            
+                            echo "Cleaning up..."
+                            cd /
+                            rm -rf /tmp/terraform-install
                         ''',
                         returnStatus: true
                     )
