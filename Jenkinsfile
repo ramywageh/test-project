@@ -27,33 +27,29 @@ pipeline {
         stage('Install Terraform') {
             steps {
                 script {
-                    // This block waits for the shell script to fully complete
-                    def result = sh(
-                        script: '''
-                            set -e
-                           
-                            echo "Downloading Terraform..."
-                            curl -s -O https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-                           
-                            echo "Unzipping..."
-                            unzip -o terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-                           
-                            echo "Moving binary to /usr/local/bin..."
-                            sudo mv terraform /usr/local/bin/
-                            
-                            echo "Verifying installation..."
-                            terraform version
-                            
-                            echo "Cleaning up..."
-                            cd /
-                            rm -rf /tmp/terraform-install
-                        ''',
-                        returnStatus: true
-                    )
+                    sh '''
+                        set -e
 
-                    if (result != 0) {
-                        error("Terraform installation failed.")
-                    }
+                        echo "Creating temp install directory..."
+                        mkdir -p /tmp/terraform-install
+                        cd /tmp/terraform-install
+
+                        echo "Downloading Terraform ${TERRAFORM_VERSION}..."
+                        curl -s -O https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+
+                        echo "Unzipping..."
+                        unzip -o terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+
+                        echo "Installing Terraform binary..."
+                        sudo mv -f terraform /usr/local/bin/terraform
+
+                        echo "Verifying install..."
+                        terraform version
+
+                        echo "Cleaning up..."
+                        cd /
+                        rm -rf /tmp/terraform-install
+                    '''
                 }
             }
         }
