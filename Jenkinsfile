@@ -20,12 +20,27 @@ pipeline {
         }
         stage('Install Terraform') {
             steps {
-                sh '''
-                curl -O https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-                unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-                sudo mv terraform /usr/local/bin/
-                terraform version
-                '''
+                script {
+                    // This block waits for the shell script to fully complete
+                    def result = sh(
+                        script: '''
+                            set -e
+                            echo "Downloading Terraform..."
+                            curl -s -O https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+                            echo "Unzipping..."
+                            unzip -o terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+                            echo "Moving binary to /usr/local/bin..."
+                            sudo mv terraform /usr/local/bin/
+                            echo "Verifying installation..."
+                            terraform version
+                        ''',
+                        returnStatus: true
+                    )
+
+                    if (result != 0) {
+                        error("Terraform installation failed.")
+                    }
+                }
             }
         }
         stage('Terraform init') {
