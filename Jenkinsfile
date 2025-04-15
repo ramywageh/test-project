@@ -22,7 +22,7 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/ramywageh/test-project.git'
             }
         }
-        stage('Install Terraform (No Sudo)') {
+        stage('Install Terraform') {
             steps {
                 script {
                     sh '''
@@ -62,8 +62,10 @@ pipeline {
         stage('Plan') {
             steps {
                 withEnv(["PATH=${TERRAFORM_BIN_DIR}:${env.PATH}"]) {
-                   sh 'terraform plan -out tfplan'
-                   sh 'terraform show -no-color tfplan > tfplan.txt'
+                   dir("${TERRAFORM_DIR}") { 
+                      sh 'terraform plan -out tfplan'
+                      sh 'terraform show -no-color tfplan > tfplan.txt'
+                    } 
                 }
             }
         }
