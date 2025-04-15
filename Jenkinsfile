@@ -16,7 +16,7 @@ pipeline {
                         
                         git(
                         url: "https://github.com/ramywageh/test-project.git",
-                        branch: "main",
+                        branch: "main"
                         )
                         }
                     }
