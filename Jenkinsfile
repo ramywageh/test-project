@@ -90,6 +90,15 @@ pipeline {
                 }
             }
         }
+        stage("Build") {
+            steps {
+                withCredentials([usernamePassword(credentialsId:"docker",usernameVariable:"USER",passwordVariable:"PASS")]){
+                sh 'docker build . -t ${USER}/todo-app:v1.${BUILD_NUMBER}'
+                sh 'docker login -u ${USER} -p ${PASS}'
+                sh 'docker push ${USER}/todo-app:v1.${BUILD_NUMBER}'
+                }
+            }
+        }
 
     }
 }
