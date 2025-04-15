@@ -58,8 +58,10 @@ pipeline {
         }
         stage('Plan') {
             steps {
-                sh 'terraform plan -out tfplan'
-                sh 'terraform show -no-color tfplan > tfplan.txt'
+                withEnv(["PATH=${TERRAFORM_BIN_DIR}:${env.PATH}"]) {
+                   sh 'terraform plan -out tfplan'
+                   sh 'terraform show -no-color tfplan > tfplan.txt'
+                }
             }
         }
         stage('Apply / Destroy') {
