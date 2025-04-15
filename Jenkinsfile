@@ -22,7 +22,7 @@ pipeline {
             steps {
                 sh 'apt-get install software-properties-common gnupg2 -y'
                 sh 'curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -'
-                sh 'apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release -cs) main"'
+                /*sh 'apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release -cs) main"'*/
                 sh 'apt-get update -y apt-get install terraform -y'
                 sh 'terraform --version'
                     
