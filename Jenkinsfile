@@ -20,7 +20,7 @@ pipeline {
         }
         stage('Terraform init') {
             steps {
-                sh 'terraform install'
+                sh 'install terraform'
                 sh 'terraform init'
             }
         }
