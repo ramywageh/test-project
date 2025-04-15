@@ -18,14 +18,18 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/ramywageh/test-project.git'
             }
         }
-        stage('Terraform init') {
+        stage('Install Terraform') {
             steps {
-                sh 'apt-get install software-properties-common gnupg2 -y'
-                sh 'curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -'
-                /*sh 'apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release -cs) main"'*/
-                sh 'apt-get update -y apt-get install terraform -y'
-                sh 'terraform --version'
-                    
+                sh '''
+                curl -O https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+                unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+                sudo mv terraform /usr/local/bin/
+                terraform version
+                '''
+            }
+        }
+        stage('Terraform init') {
+            steps {    
                 sh 'terraform init'
             }
         }
