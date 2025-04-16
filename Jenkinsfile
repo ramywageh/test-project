@@ -71,7 +71,7 @@ pipeline {
         }
         stage('Apply / Destroy') {
             steps {
-                
+                withEnv(["PATH=${TERRAFORM_BIN_DIR}:${env.PATH}"]) {
                     script {
                       if (params.action == 'apply') {
                           if (!params.autoApprove) {
@@ -87,9 +87,9 @@ pipeline {
                           error "Invalid action selected. Please choose either 'apply' or 'destroy'."
                         }
                     }
-                
+                }
             }
-        }
+        }/*
         stage("Build") {
             steps {
                 withCredentials([usernamePassword(credentialsId:"docker",usernameVariable:"USER",passwordVariable:"PASS")]){
@@ -98,7 +98,7 @@ pipeline {
                 sh 'docker push ${USER}/todo-app:v1.${BUILD_NUMBER}'
                 }
             }
-        }
+        }*/
 
     }
 }
