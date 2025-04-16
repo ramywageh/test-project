@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        TERRAFORM_DIR = "terraform/"
+        TERRAFORM_DIR = "Terraform/"
         ANSIBLE_PLAYBOOK = "ansible/playbook.yml"
     }
 
