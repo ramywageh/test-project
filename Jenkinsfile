@@ -8,7 +8,7 @@ pipeline {
 
     environment {
         TERRAFORM_DIR = "terraform/"
-        ANSIBLE_PLAYBOOK = "ansible/playbook.yml" // Note: Unused in the script
+        ANSIBLE_PLAYBOOK = "ansible/playbook.yml"
     }
 
     stages {
@@ -17,39 +17,36 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/ramywageh/test-project.git'
             }
         }
+
         stage('Terraform Init') {
             steps {
-                dir("${TERRAFORM_DIR}") {
+                dir("${env.TERRAFORM_DIR}") {
                     sh 'terraform init'
                 }
             }
         }
-        /*stage('Plan') {
+
+        stage('Plan') {
             steps {
-                dir("${TERRAFORM_DIR}") {
-                    script {
-                        try {
-                            sh 'ls -la' // Debug: Check directory contents
-                            sh 'terraform plan -out tfplan'
-                            sh 'terraform show -no-color tfplan > tfplan.txt'
-                        } catch (Exception e) {
-                            error "Terraform plan failed: ${e.message}. Ensure .tf files exist in ${TERRAFORM_DIR}."
-                        }
-                    }    
+                dir("${env.TERRAFORM_DIR}") {
+                    sh 'terraform plan -out=tfplan'
+                    sh 'terraform show -no-color tfplan > tfplan.txt'
                 }
             }
-        }*/
+        }
+
         stage('Apply / Destroy') {
             steps {
-                dir("${TERRAFORM_DIR}") {
+                dir("${env.TERRAFORM_DIR}") {
                     script {
                         if (params.action == 'apply') {
                             if (!params.autoApprove) {
-                                def plan = readFile "${TERRAFORM_DIR}/tfplan.txt"
+                                def plan = readFile 'tfplan.txt'
                                 input message: "Do you want to apply the plan?",
-                                      parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
+                                parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
                             }
-                            sh 'terraform apply tfplan'
+
+                            sh 'terraform apply -input=false tfplan'
                         } else if (params.action == 'destroy') {
                             sh 'terraform destroy --auto-approve'
                         } else {
@@ -58,6 +55,13 @@ pipeline {
                     }
                 }
             }
+        }
+    }
+
+    post {
+        always {
+            echo 'Cleaning up...'
+            // You can add cleanup logic here if needed.
         }
     }
 }
