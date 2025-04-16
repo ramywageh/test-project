@@ -27,8 +27,15 @@ pipeline {
         stage('Plan') {
             steps {
                 dir("${TERRAFORM_DIR}") {
-                    sh 'terraform plan -out tfplan'
-                    sh 'terraform show -no-color tfplan > tfplan.txt'
+                    script {
+                        try {
+                            sh 'ls -la' // Debug: Check directory contents
+                            sh 'terraform plan -out tfplan'
+                            sh 'terraform show -no-color tfplan > tfplan.txt'
+                        } catch (Exception e) {
+                            error "Terraform plan failed: ${e.message}. Ensure .tf files exist in ${TERRAFORM_DIR}."
+                        }
+                    }    
                 }
             }
         }
