@@ -73,25 +73,25 @@ pipeline {
             steps {
                 withEnv(["PATH=${TERRAFORM_BIN_DIR}:${env.PATH}"]) {
                     dir("${TERRAFORM_DIR}") { 
-                    script {
-                      if (params.action == 'apply') {
-                          if (!params.autoApprove) {
-                              def plan = readFile 'tfplan.txt'
-                              input message: "Do you want to apply the plan?",
-                              parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
-                          }
-
-                          sh 'terraform ${action} -input=false tfplan'
-                      } else if (params.action == 'destroy') {
-                          sh 'terraform ${action} --auto-approve'
-                      } else {
-                          error "Invalid action selected. Please choose either 'apply' or 'destroy'."
+                        script {
+                            if (params.action == 'apply') {
+                                if (!params.autoApprove) {
+                                 def plan = readFile 'tfplan.txt'
+                                 input message: "Do you want to apply the plan?",
+                                 parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
+                                }
+              
+                            sh 'terraform ${action} -input=false tfplan'
+                            } else if (params.action == 'destroy') {
+                                sh 'terraform ${action} --auto-approve'
+                            } else {
+                                error "Invalid action selected. Please choose either 'apply' or 'destroy'."
+                            }
                         }
-                    }
                     }
                 }
             }
-        }/*
+        }
         stage("Build") {
             steps {
                 withCredentials([usernamePassword(credentialsId:"docker",usernameVariable:"USER",passwordVariable:"PASS")]){
@@ -100,7 +100,6 @@ pipeline {
                 sh 'docker push ${USER}/todo-app:v1.${BUILD_NUMBER}'
                 }
             }
-        }*/
-
+        }
     }
 }
