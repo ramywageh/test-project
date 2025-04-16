@@ -24,7 +24,7 @@ pipeline {
                 }
             }
         }
-        stage('Plan') {
+        /*stage('Plan') {
             steps {
                 dir("${TERRAFORM_DIR}") {
                     script {
@@ -38,7 +38,7 @@ pipeline {
                     }    
                 }
             }
-        }
+        }*/
         stage('Apply / Destroy') {
             steps {
                 dir("${TERRAFORM_DIR}") {
