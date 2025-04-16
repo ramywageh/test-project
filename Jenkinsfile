@@ -95,14 +95,9 @@ pipeline {
         stage("Build") {
             steps {
                 sh '''
-                   if ! command -v sudo &> /dev/null; then
-                        apt update
-                        apt install -y sudo
-                    fi
-                    if ! command -v docker &> /dev/null; then
-                        apt update
-                        apt install -y docker.io
-                        usermod -aG docker $USER
+                   apt update
+                    apt install -y sudo docker.io
+                    usermod -aG docker $USER
                 '''
                 
                 withCredentials([usernamePassword(credentialsId:"docker",usernameVariable:"USER",passwordVariable:"PASS")]){
