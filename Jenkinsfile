@@ -98,12 +98,13 @@ pipeline {
                    apt update
                     apt install -y sudo docker.io
                     usermod -aG docker $USER
+                    docker build -t my-app .
                 '''
                 
-                withCredentials([usernamePassword(credentialsId:"docker",usernameVariable:"USER",passwordVariable:"PASS")]){
+               /* withCredentials([usernamePassword(credentialsId:"docker",usernameVariable:"USER",passwordVariable:"PASS")]){
                 sh 'docker build . -t ${USER}/todo-app:v1.${BUILD_NUMBER}'
                 sh 'docker login -u ${USER} -p ${PASS}'
-                sh 'docker push ${USER}/todo-app:v1.${BUILD_NUMBER}'
+                sh 'docker push ${USER}/todo-app:v1.${BUILD_NUMBER}'*/
                 }
             }
         }
