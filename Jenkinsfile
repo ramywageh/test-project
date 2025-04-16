@@ -28,16 +28,16 @@ pipeline {
 
         stage('Plan') {
             steps {
-                dir("${env.TERRAFORM_DIR}") {
+        
                     sh 'terraform plan -out=tfplan'
                     sh 'terraform show -no-color tfplan > tfplan.txt'
-                }
+                
             }
         }
 
         stage('Apply / Destroy') {
             steps {
-                dir("${env.TERRAFORM_DIR}") {
+                
                     script {
                         if (params.action == 'apply') {
                             if (!params.autoApprove) {
@@ -53,7 +53,7 @@ pipeline {
                             error "Invalid action selected. Please choose either 'apply' or 'destroy'."
                         }
                     }
-                }
+                
             }
         }
     }
